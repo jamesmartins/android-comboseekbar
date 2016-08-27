@@ -19,45 +19,37 @@ import java.util.List;
 
 public class ComboSeekBar extends SeekBar {
     private CustomThumbDrawable mThumb;
-    private List<Dot> mDots = new ArrayList<Dot>();
+    private List<Dot> mDots = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
     private Dot prevSelected = null;
     private boolean isSelected = false;
     private int mColor;
     private int mTextSize;
+    private int mTextBottomPadding;
     private int mDotRadius;
     private int mThumbRadius;
-    private boolean mIsMultiline;
 
-    /**
-     * @param context context.
-     */
     public ComboSeekBar(Context context) {
         super(context);
     }
 
-    /**
-     * @param context context.
-     * @param attrs   attrs.
-     */
     public ComboSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ComboSeekBar);
 
         mColor = a.getColor(R.styleable.ComboSeekBar_color, Color.WHITE);
         mTextSize = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textSize, 5);
-        mIsMultiline = a.getBoolean(R.styleable.ComboSeekBar_multiline, false);
+        mTextBottomPadding = a.getDimensionPixelSize(R.styleable.ComboSeekBar_textBottomPadding, 8);
         mDotRadius = a.getDimensionPixelSize(R.styleable.ComboSeekBar_dotRadius, (int) toPix(5));
         mThumbRadius = a.getDimensionPixelSize(R.styleable.ComboSeekBar_thumbRadius, (int) toPix(15));
-        // do something with str
 
         a.recycle();
 
         mThumb = new CustomThumbDrawable(mColor, mThumbRadius);
         setThumb(mThumb);
-        setProgressDrawable(new CustomDrawable(this.getProgressDrawable(), this, mDotRadius, mThumb.getRadius(), mDots, mColor, mTextSize, mIsMultiline));
+        setProgressDrawable(new CustomDrawable(this.getProgressDrawable(), this, mDotRadius, mThumb.getRadius(), mDots,
+                mColor, mTextSize, mTextBottomPadding));
 
-        // по умолчанию не равно 0 и это проблема
         setPadding(0, 0, 0, 0);
     }
 
@@ -67,13 +59,11 @@ public class ComboSeekBar extends SeekBar {
         return super.onTouchEvent(event);
     }
 
-    /**
-     * @param color color.
-     */
     public void setColor(int color) {
         mColor = color;
         mThumb.setColor(color);
-        setProgressDrawable(new CustomDrawable(this.getProgressDrawable(), this, mDotRadius, mThumb.getRadius(), mDots, color, mTextSize, mIsMultiline));
+        setProgressDrawable(new CustomDrawable(this.getProgressDrawable(), this, mDotRadius, mThumb.getRadius(), mDots,
+                color, mTextSize, mTextBottomPadding));
     }
 
     public synchronized void setSelection(int position) {
@@ -81,11 +71,7 @@ public class ComboSeekBar extends SeekBar {
             throw new IllegalArgumentException("Position is out of bounds:" + position);
         }
         for (Dot dot : mDots) {
-            if (dot.id == position) {
-                dot.isSelected = true;
-            } else {
-                dot.isSelected = false;
-            }
+            dot.isSelected = dot.id == position;
         }
 
         isSelected = true;
@@ -158,7 +144,7 @@ public class ComboSeekBar extends SeekBar {
     }
 
     private void handleClick(Dot selected) {
-        if ((prevSelected == null) || (prevSelected.equals(selected) == false)) {
+        if ((prevSelected == null) || (!prevSelected.equals(selected))) {
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(null, this, selected.id, selected.id);
             }
@@ -184,9 +170,6 @@ public class ComboSeekBar extends SeekBar {
         setMeasuredDimension(resolveSize(dw, widthMeasureSpec), resolveSize(dh, heightMeasureSpec));
     }
 
-    /**
-     * dot coordinates.
-     */
     private void initDotsCoordinates() {
         float intervalWidth = (getWidth() - (mThumb.getRadius() * 2)) / (mDots.size() - 1);
         for (Dot dot : mDots) {
@@ -218,7 +201,25 @@ public class ComboSeekBar extends SeekBar {
 
         @Override
         public boolean equals(Object o) {
-            return ((Dot) o).id == id;
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Dot dot = (Dot) o;
+
+            if (id != dot.id) return false;
+            if (mX != dot.mX) return false;
+            if (isSelected != dot.isSelected) return false;
+            return text != null ? text.equals(dot.text) : dot.text == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id;
+            result = 31 * result + mX;
+            result = 31 * result + (text != null ? text.hashCode() : 0);
+            result = 31 * result + (isSelected ? 1 : 0);
+            return result;
         }
     }
 

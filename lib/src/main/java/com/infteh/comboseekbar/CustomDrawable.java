@@ -35,12 +35,11 @@ public class CustomDrawable extends Drawable {
     private int mTextSize;
     private float mTextMargin;
     private int mTextHeight;
-    private boolean mIsMultiline;
+    private float mTextBottomPadding;
 
     public CustomDrawable(Drawable base, ComboSeekBar slider,
                           float dotRadius, float thumbRadius, List<Dot> dots,
-                          int color, int textSize, boolean isMultiline) {
-        mIsMultiline = isMultiline;
+                          int color, int textSize, int textBottomPadding) {
         mySlider = slider;
         myBase = base;
         mDots = dots;
@@ -75,9 +74,10 @@ public class CustomDrawable extends Drawable {
         textUnselected.setTextSize(mTextSize);
         textSelected.setTextSize(mTextSize);
 
-        mTextHeight = textBounds.height();
+        mTextHeight = textBounds.height() + 20;
         mDotRadius = dotRadius;
         mTextMargin = toPix(3);
+        mTextBottomPadding = textBottomPadding;
     }
 
     private float toPix(int size) {
@@ -102,19 +102,18 @@ public class CustomDrawable extends Drawable {
 
     @Override
     public final void draw(Canvas canvas) {
-        // Log.d("--- draw:" + (getBounds().right - getBounds().left));
-        int height = this.getIntrinsicHeight() / 2;
+        int middleY = this.getIntrinsicHeight() / 2;
         if (mDots.size() == 0) {
-            canvas.drawLine(0, height, getBounds().right, height, unselectLinePaint);
+            canvas.drawLine(0, middleY, getBounds().right, middleY, unselectLinePaint);
             return;
         }
         for (Dot dot : mDots) {
-            drawText(canvas, dot, dot.mX, height);
+            drawText(canvas, dot, dot.mX, middleY);
             if (dot.isSelected) {
-                canvas.drawLine(mDots.get(0).mX, height, dot.mX, height, selectLinePaint);
-                canvas.drawLine(dot.mX, height, mDots.get(mDots.size() - 1).mX, height, unselectLinePaint);
+                canvas.drawLine(mDots.get(0).mX, middleY, dot.mX, middleY, selectLinePaint);
+                canvas.drawLine(dot.mX, middleY, mDots.get(mDots.size() - 1).mX, middleY, unselectLinePaint);
             }
-            canvas.drawCircle(dot.mX, height, mDotRadius, circleLinePaint);
+            canvas.drawCircle(dot.mX, middleY, mDotRadius, circleLinePaint);
         }
     }
 
@@ -136,33 +135,15 @@ public class CustomDrawable extends Drawable {
             xres = x - (textBounds.width() / 2);
         }
 
-        float yres;
-        // Если многострочный текст
-        if (mIsMultiline) {
-            // Если четная точка, то сверху
-            if ((dot.id % 2) == 0) {
-                yres = y - mTextMargin - mDotRadius;
-            } else {
-                yres = y + mTextHeight;
-            }
-        } else {
-            yres = y - (mDotRadius * 2) + mTextMargin;
-        }
+        float yres = y - mThumbRadius - mTextBottomPadding;
 
-        if (dot.isSelected) {
-            canvas.drawText(dot.text, xres, yres, textSelected);
-        } else {
-            canvas.drawText(dot.text, xres, yres, textUnselected);
-        }
+        canvas.drawText(dot.text, xres, yres, dot.isSelected ? textSelected : textUnselected);
     }
+
 
     @Override
     public final int getIntrinsicHeight() {
-        if (mIsMultiline) {
-            return (int) (selectLinePaint.getStrokeWidth() + mDotRadius + (mTextHeight) * 2 + mTextMargin);
-        } else {
-            return (int) (mThumbRadius + mTextMargin + mTextHeight + mDotRadius);
-        }
+        return (int) (mThumbRadius + mTextHeight + 2 * mTextMargin + 2 * mTextBottomPadding);
     }
 
     @Override

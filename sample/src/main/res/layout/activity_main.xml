@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
-    android:paddingTop="16dp"
-    tools:context="com.androidmess.comboseekbarsample.MainActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                tools:context="com.androidmess.comboseekbarsample.MainActivity">
 
-    <com.infteh.comboseekbar.ComboSeekBar xmlns:cbs="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/comboseekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        cbs:color="@android:color/black"
-        cbs:textSize="16sp"
-        cbs:dotRadius="3dp"
-        cbs:thumbRadius="6dp"/>
+    <com.infteh.comboseekbar.ComboSeekBar android:id="@+id/comboseekbar"
+                                          xmlns:cbs="http://schemas.android.com/apk/res-auto"
+                                          android:layout_width="match_parent"
+                                          android:layout_height="wrap_content"
+                                          cbs:color="@android:color/black"
+                                          cbs:dotRadius="3dp"
+                                          cbs:textBottomPadding="4dp"
+                                          cbs:textSize="16sp"
+                                          cbs:thumbRadius="6dp"/>
 </RelativeLayout>

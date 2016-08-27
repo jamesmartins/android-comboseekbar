@@ -2,9 +2,9 @@
 <resources>
     <attr name="color" format="color" />
     <declare-styleable name="ComboSeekBar">
-        <attr name="multiline" format="boolean" />
         <attr name="color" />
         <attr name="textSize" format="dimension" />
+        <attr name="textBottomPadding" format="dimension" />
         <attr name="dotRadius" format="dimension" />
         <attr name="thumbRadius" format="dimension" />
     </declare-styleable>
