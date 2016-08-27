@@ -1,13 +1,55 @@
 # ComboBox + SeekBar
 
-![Screenshot](https://github.com/karabaralex/android-comboseekbar/raw/master/screenshot.png)
+![Screenshot](https://github.com/sswierczek/android-comboseekbar/blob/master/screenshot.png)
 
-## Features
+My fork of ComboSeekBar with Gradle and some modifications.
 
- * Library project
+## Original repository
 
-## Suggestions
+https://github.com/karabaralex/android-comboseekbar
 
-I will appreciate any help to customize and enhance the library.
+## Sample usage
 
-Repository at <https://github.com/karabaralex/android-comboseekbar>.
+To use **my version** download aar from [releases](https://github.com/sswierczek/android-comboseekbar/releases)
+and check out sample project.
+
+
+Example usage of **original library**:
+
+ 1. Open your project **build.gradle (root  folder)** and add:
+
+        allprojects {
+            repositories {
+                maven { url "http://dl.bintray.com/arnoult-antoine/maven/" }
+                ...
+            }
+        }
+
+ 2. In app main module (probably "app" directory) **build.gradle** add:
+
+        dependencies {
+            ...
+            compile 'com.aat:android-comboseekbar:1.0.2@aar'
+        }
+
+ 3. Go to your **XML layout** file and put:
+
+        <com.infteh.comboseekbar.ComboSeekBar
+            xmlns:cbs="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/comboseekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            cbs:myColor="@android:color/black"
+            cbs:textSize="16sp" />
+
+ 4. Init it with for example this code:
+
+        ComboSeekBar comboSeekBar = (ComboSeekBar) findViewById(R.id.comboseekbar);
+        List<String> points = new ArrayList<>();
+        points.add("Point 1");
+        points.add("Point 2");
+        points.add("Point 3");
+        points.add("Point 4");
+        comboSeekBar.setAdapter(points);
+
+ 5. Enjoy your ComboSeekBar!
