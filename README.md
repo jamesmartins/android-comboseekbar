@@ -1,5 +1,7 @@
 # ComboBox + SeekBar
 
+[![Build Status](https://travis-ci.org/sswierczek/android-comboseekbar.svg?branch=master)](https://travis-ci.org/sswierczek/android-comboseekbar)
+
 ![Screenshot](https://github.com/sswierczek/android-comboseekbar/blob/master/screenshot.png)
 
 My fork of ComboSeekBar with Gradle and some modifications.
